@@ -71,4 +71,34 @@ return {
     cmd = "HopWord"
   },
 
+  {
+    "L3MON4D3/LuaSnip",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    config = function()
+      local ls = require("luasnip")
+      local s = ls.snippet
+      local t = ls.text_node
+      local i = ls.insert_node
+
+      ls.add_snippets("cpp", {
+        s("cpmain", {
+          t({
+            "#include <bits/stdc++.h>",
+            "using namespace std;",
+            "",
+            "int main() {",
+            "    ios_base::sync_with_stdio(false);",
+            "    cin.tie(nullptr);",
+            "    // Your code here",
+            "    return 0;",
+            "}"
+          }),
+        }),
+        s("func", {
+          t("void "), i(1, "functionName"), t("("), i(2, "args"), t({") {", "    "}), i(0, "// code here"), t({"", "}"})
+        }),
+      })
+    end,
+  },
+
 }
