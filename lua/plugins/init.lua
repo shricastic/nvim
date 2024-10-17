@@ -80,25 +80,46 @@ return {
       local t = ls.text_node
       local i = ls.insert_node
 
+      require("luasnip.loaders.from_vscode").lazy_load()
+
       ls.add_snippets("cpp", {
         s("cpmain", {
           t({
             "#include <bits/stdc++.h>",
+            "#define ll long long",
+            "#define MOD 1000000007",
+            "",
             "using namespace std;",
+            "",
+            "void run() {",
+            "    "
+          }),
+          i(1, "// Your code here"),
+          t({
+            "",
+            "}",
             "",
             "int main() {",
             "    ios_base::sync_with_stdio(false);",
             "    cin.tie(nullptr);",
-            "    // Your code here",
+            "    run();",
             "    return 0;",
             "}"
           }),
         }),
         s("func", {
-          t("void "), i(1, "functionName"), t("("), i(2, "args"), t({") {", "    "}), i(0, "// code here"), t({"", "}"})
+          t("void "),
+          i(1, "functionName"),
+          t("("),
+          i(2, "args"),
+          t({") {", "    "}),
+          i(3, "// Your code here"),
+          t({"", "}"})
         }),
       })
-    end,
-  },
 
+      -- Enable luasnip for all filetypes
+      ls.filetype_extend("all", { "_" })
+    end,
+  }
 }
