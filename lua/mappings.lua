@@ -11,3 +11,6 @@ map("i", "jk", "<ESC>")
 
 --custom keymap for hop
 map('n', '<leader>hw', ':HopWord<CR>', { noremap = true, silent = true })
+
+--manual formatting 
+map("n", "<leader>cf", function() require("conform").format({ async = true, lsp_fallback = true }) end, { desc = "Format Code" })

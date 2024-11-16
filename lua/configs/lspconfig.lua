@@ -82,3 +82,25 @@ lspconfig.emmet_ls.setup({
       }
     }
 })
+
+
+lspconfig.pyright.setup({
+    capabilities = capabilities,
+    filetypes = { "python" },
+    root_dir = lspconfig.util.root_pattern(".git", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt"),
+    settings = {
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "workspace", -- Options: "workspace", "openFilesOnly"
+            },
+        },
+    },
+    init_options = {
+        python = {
+            venvPath = "~/.virtualenvs", -- Example: specify a directory for virtual environments
+            pythonPath = "/usr/bin/python3", -- Path to the Python interpreter
+        },
+    },
+})
