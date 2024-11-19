@@ -104,3 +104,23 @@ lspconfig.pyright.setup({
         },
     },
 })
+
+-- Configure gopls for Go development
+require'lspconfig'.gopls.setup({
+  capabilities = nvlsp.capabilities,  -- Ensure your custom LSP capabilities are set correctly
+  filetypes = { "go", "gomod" },  -- Enable Go and Go modules filetypes
+  root_dir = require'lspconfig'.util.root_pattern("go.mod", ".git"),  -- Set root directory based on go.mod or .git
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true,  -- Enable unused parameters analysis
+        shadow = true,        -- Enable shadowed variables analysis
+      },
+      staticcheck = true,  -- Enable staticcheck for additional checks
+      usePlaceholders = true,  -- Enable placeholders for completions
+      completeUnimported = true,  -- Complete unimported symbols
+      gofumpt = true,  -- Enable gofmt with stricter rules
+    },
+  },
+})
+

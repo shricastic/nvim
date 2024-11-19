@@ -7,6 +7,7 @@ local options = {
     javascriptreact = { "prettier" }, -- For JSX
     typescript = { "prettier" }, -- For TypeScript
     typescriptreact = { "prettier" }, -- For TSX
+    go = { "gofmt", "gofumpt" }
   },
 
   -- format_on_save = {
