@@ -27,9 +27,8 @@ return {
         "tsx",
         -- ... add more as needed
       },
-      highlight = {
-        enable = true,
-      },
+      highlight = { enable = true },
+      fold = { enable = true }
     },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
@@ -110,7 +109,7 @@ return {
             "using namespace std;",
             "",
             "void run() {",
-            "    "
+            "  "
           }),
           i(1, "// Your code here"),
           t({
@@ -118,10 +117,10 @@ return {
             "}",
             "",
             "int main() {",
-            "    ios_base::sync_with_stdio(false);",
-            "    cin.tie(nullptr);",
-            "    run();",
-            "    return 0;",
+            "  ios_base::sync_with_stdio(false);",
+            "  cin.tie(nullptr);",
+            "  run();",
+            "  return 0;",
             "}"
           }),
         }),
