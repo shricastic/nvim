@@ -10,3 +10,6 @@ vim.o.foldlevel = 0  -- Keeps all folds open by default
 
 -- local o = vim.o
 -- o.cursorlineopt ='both' -- to enable cursorline!
+
+-- relative line numbers
+vim.o.relativenumber = true

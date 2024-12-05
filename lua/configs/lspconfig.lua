@@ -24,51 +24,90 @@ end
 -- }
 
 --custom lsp config
+lspconfig.rust_analyzer.setup {
+  on_attach = function(client, bufnr)
+    -- Call the original on_attach function if it exists
+    if nvlsp and nvlsp.on_attach then
+      nvlsp.on_attach(client, bufnr)
+    end
 
-require('lspconfig').rust_analyzer.setup{
-  on_attach = on_attach,
+    -- Check if inlay hints are supported and enable them
+    if client.server_capabilities.inlayHintProvider then
+      -- Use vim.defer_fn to ensure the buffer is fully loaded
+      vim.defer_fn(function()
+        pcall(function()
+          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        end)
+      end, 500)
+    end
+  end,
+
+  -- maintain your existing on_init and capabilities
+  on_init = nvlsp.on_init,
+  capabilities = nvlsp.capabilities,
+
   settings = {
     ["rust-analyzer"] = {
       assist = {
-        importMergeBehavior = "last",
-        importGranularity = "module",
+        importmergebehavior = "last",
+        importgranularity = "module",
+        importprefix = "by_self",
       },
       cargo = {
-        loadOutDirsFromCheck = true,
+        loadoutdirsfromcheck = true,
       },
-      procMacro = {
+      procmacro = {
         enable = true,
+      },
+      inlayhints = {
+        enable = true,
+        showparameterhints = true,
+        typehints = { 
+          enable = true,
+          hidenamedconstructor = false 
+        },
+        chaininghints = { enable = true },
+        auto = true,
+      },
+      completion = {
+        autoimport = {
+          enable = true,
+        },
       },
     },
   },
 }
 
 lspconfig.ts_ls.setup({
-    on_attach = on_attach,
-    capabilities = capabilities,
+    on_attach = nvlsp.on_attach,
+    capabilities = nvlsp.capabilities,
     filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
     root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
     settings = {
       javascript = {
-        suggestionActions = { enabled = false },
-        autoClosingTags = true,
+        suggestionactions = { enabled = false },
+        autoclosingtags = true,
         suggest = {
-          completeFunctionCalls = true,
+          autoimport = true,
+          completefunctioncalls = true,
         },
+        importmodulespecifierpreference = "non-relative",  -- prefer non-relative import paths
       },
       typescript = {
-        suggestionActions = { enabled = false },
-        autoClosingTags = true,
+        suggestionactions = { enabled = false },
+        autoclosingtags = true,
         suggest = {
-          completeFunctionCalls = true,
+          autoimport = true,
+          completefunctioncalls = true,
         },
+        importmodulespecifierpreference = "non-relative",  -- prefer non-relative import paths
       },
     },
 })
 
 lspconfig.emmet_ls.setup({
-    capabilities = capabilities,
-    filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "javascript", "typescript", "markdown" },
+    capabilities = nvlsp.capabilities,
+    filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "javascript", "typescript", "markdown", "svelte" },
     init_options = {
       html = {
         options = {
@@ -85,7 +124,7 @@ lspconfig.emmet_ls.setup({
 
 
 lspconfig.pyright.setup({
-    capabilities = capabilities,
+    capabilities = nvlsp.capabilities,
     filetypes = { "python" },
     root_dir = lspconfig.util.root_pattern(".git", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt"),
     settings = {

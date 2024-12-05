@@ -1,4 +1,9 @@
 return {
+  --Temp -> vim be good plugin
+  {
+    'ThePrimeagen/vim-be-good',
+  },
+
   {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
@@ -86,6 +91,14 @@ return {
     end,
   },
 
+  --for surround 
+  {
+    "machakann/vim-sandwich",
+    event = "VeryLazy", -- Optional: Lazy load for better performance
+    config = function()
+      vim.g.sandwich_no_default_key_mappings = 0 -- Enables default keybindings
+    end,
+  },
 
   --snippet for cp
   {
