@@ -17,7 +17,7 @@ vim.keymap.set("n", "s", "<nop>")
 vim.keymap.set("x", "s", "<nop>")
 
 --keymap for go to definition
-vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "Go to definition" })
 
 --manual formatting 
 map("n", "<leader>cf", function() require("conform").format({ async = true, lsp_fallback = true }) end, { desc = "Format Code" })

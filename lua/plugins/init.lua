@@ -122,11 +122,17 @@ return {
             "using namespace std;",
             "",
             "void run() {",
-            "  "
+            "  ",
+            "  // Shri's code here",
+            "  int t;",
+            "  cin >> t;",
+            "",
+            "  while(t--) {"
           }),
-          i(1, "// Your code here"),
+          i(1, ""),
           t({
             "",
+            "  }",
             "}",
             "",
             "int main() {",
