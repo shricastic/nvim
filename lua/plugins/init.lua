@@ -4,10 +4,83 @@ return {
     'ThePrimeagen/vim-be-good',
   },
 
+  -- formatting conf
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
+    event = 'BufWritePre', -- uncomment for format on save
     opts = require "configs.conform",
+  },
+
+  -- surround etc
+  {
+    "kylechui/nvim-surround",
+    version = "^3.0.0",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
+    end
+  },
+
+
+  -- Folding plugin: nvim-ufo
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async",
+      {
+        "luukvbaal/statuscol.nvim",
+        config = function()
+          local builtin = require("statuscol.builtin")
+          require("statuscol").setup({
+            relculright = true,
+            segments = {
+              { text = { "%s" },                  click = "v:lua.ScSa" },
+              { text = { builtin.lnumfunc },      click = "v:lua.ScLa" },
+              { text = { builtin.foldfunc, " " }, click = "v:lua.ScFa" },
+            },
+          })
+        end,
+      },
+    },
+    event = "VeryLazy",
+
+    config = function(_, opts)
+      -- Simple, clean fold handler without symbols
+      local handler = function(virtText, lnum, endLnum, width, truncate)
+        local newVirtText = {}
+        local suffix = (' 󰁂 %d '):format(endLnum - lnum)
+        local sufWidth = vim.fn.strdisplaywidth(suffix)
+        local targetWidth = width - sufWidth
+        local curWidth = 0
+        for _, chunk in ipairs(virtText) do
+          local chunkText = chunk[1]
+          local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+          if targetWidth > curWidth + chunkWidth then
+            table.insert(newVirtText, chunk)
+          else
+            chunkText = truncate(chunkText, targetWidth - curWidth)
+            local hlGroup = chunk[2]
+            table.insert(newVirtText, { chunkText, hlGroup })
+            chunkWidth = vim.fn.strdisplaywidth(chunkText)
+            -- str width returned from truncate() may less than 2nd argument, need padding
+            if curWidth + chunkWidth < targetWidth then
+              suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+            end
+            break
+          end
+          curWidth = curWidth + chunkWidth
+        end
+        table.insert(newVirtText, { suffix, 'MoreMsg' })
+        return newVirtText
+      end
+
+      opts = opts or {}
+      opts.fold_virt_text_handler = handler
+      -- opts.provider_selector = function(_, _, _) return { "treesitter", "indent" } end
+
+      require("ufo").setup(opts)
+    end,
   },
 
   -- These are some examples, uncomment them if you want to see them work!
@@ -48,7 +121,7 @@ return {
         -- config
       }
     end,
-    dependencies = { {'nvim-tree/nvim-web-devicons'}}
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } }
   },
 
   {
@@ -62,17 +135,13 @@ return {
     end,
   },
 
+  -- leap to jump
   {
-    'smoka7/hop.nvim',
-    version = "*",
-    opts = {
-        keys = 'etovxqpdygfblzhckisuran'
-    },
-    config = function ()
-      require'hop'.setup()
+    "ggandor/leap.nvim",
+    config = function()
+      local leap = require("leap")
+      -- leap.add_default_mappings()
     end,
-    event = "VeryLazy",
-    cmd = "HopWord"
   },
 
   --linter and formatting
@@ -84,20 +153,52 @@ return {
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.stylua,
-          null_ls.builtins.formatting.prettier, -- Formatter for JS/TS
+          null_ls.builtins.formatting.prettier,  -- Formatter for JS/TS
           null_ls.builtins.diagnostics.eslint_d, -- Linter for JS/TS
         },
       })
     end,
   },
 
-  --for surround 
+
+  -- nvim commnets for ts
   {
-    "machakann/vim-sandwich",
-    event = "VeryLazy", -- Optional: Lazy load for better performance
+    "folke/ts-comments.nvim",
+    opts = {},
+    event = "VeryLazy",
+    enabled = vim.fn.has("nvim-0.10.0") == 1,
+  },
+
+  {
+    "elixir-tools/elixir-tools.nvim",
+    version = "*",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
-      vim.g.sandwich_no_default_key_mappings = 0 -- Enables default keybindings
+      local elixir = require("elixir")
+      local elixirls = require("elixir.elixirls")
+
+      elixir.setup {
+        nextls = { enable = true },
+        elixirls = {
+          enable = true,
+          settings = elixirls.settings {
+            dialyzerEnabled = false,
+            enableTestLenses = false,
+          },
+          on_attach = function(client, bufnr)
+            vim.keymap.set("n", "<space>fp", ":ElixirFromPipe<cr>", { buffer = true, noremap = true })
+            vim.keymap.set("n", "<space>tp", ":ElixirToPipe<cr>", { buffer = true, noremap = true })
+            vim.keymap.set("v", "<space>em", ":ElixirExpandMacro<cr>", { buffer = true, noremap = true })
+          end,
+        },
+        projectionist = {
+          enable = true
+        }
+      }
     end,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
   },
 
   --snippet for cp
@@ -148,9 +249,9 @@ return {
           i(1, "functionName"),
           t("("),
           i(2, "args"),
-          t({") {", "    "}),
+          t({ ") {", "    " }),
           i(3, "// Your code here"),
-          t({"", "}"})
+          t({ "", "}" })
         }),
       })
 
