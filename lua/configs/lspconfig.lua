@@ -194,7 +194,13 @@ lspconfig.tailwindcss.setup({
 })
 
 lspconfig.ts_ls.setup({
-  on_attach = nvlsp.on_attach,
+  on_attach = function(client, bufnr)
+    nvlsp.on_attach(client, bufnr)
+    -- Ensure hover is available
+    if client.server_capabilities.hoverProvider then
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Show hover information" })
+    end
+  end,
   capabilities = nvlsp.capabilities,
   filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
   root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),

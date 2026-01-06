@@ -12,6 +12,9 @@ map("i", "jk", "<ESC>")
 --keymap for go to definition
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "Go to definition" })
 
+--keymap for hover (show function signature)
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "Show hover information" })
+
 --manual formatting 
 map("n", "<leader>cf", function() require("conform").format({ async = true, lsp_fallback = true }) end, { desc = "Format Code" })
 

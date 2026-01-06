@@ -3,11 +3,13 @@ local options = {
     lua = { "stylua" },
     css = { "prettier" },
     html = { "prettier" },
-    javascript = { "prettier" }, -- Add JavaScript formatter
+    javascript = { "prettier" },      -- Add JavaScript formatter
     javascriptreact = { "prettier" }, -- For JSX
-    typescript = { "prettier" }, -- For TypeScript
+    typescript = { "prettier" },      -- For TypeScript
     typescriptreact = { "prettier" }, -- For TSX
-    go = { "gofmt", "gofumpt" }
+    go = { "gofmt", "gofumpt" },
+    json = { "prettier" },
+    jsonc = { "prettier" }
   },
 
   format_on_save = {

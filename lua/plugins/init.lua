@@ -201,6 +201,27 @@ return {
     },
   },
 
+  -- LSP signature help (shows function parameters while typing)
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("lsp_signature").setup({
+        bind = true,
+        handler_opts = {
+          border = "rounded"
+        },
+        floating_window = true,
+        hint_enable = true,
+        hint_prefix = "🐼 ",
+        hi_parameter = "LspSignatureActiveParameter",
+        max_height = 12,
+        max_width = 80,
+        toggle_key = '<C-k>',
+      })
+    end,
+  },
+
   --snippet for cp
   {
     "L3MON4D3/LuaSnip",
